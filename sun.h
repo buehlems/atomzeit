@@ -22,6 +22,8 @@ class sun {
   int monthday2dayofyear(int m, int d);
   int adjustSunRise(int day);
   int adjustSunSet(int day);
+  int adjustSunRise(date d) { adjustSunRise(monthday2dayofyear(d)); }
+  int adjustSunSet(date d)  { adjustSunSet(monthday2dayofyear(d)); }
  private:
   // months: full year Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
   const int months[2][13] = { {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365},
