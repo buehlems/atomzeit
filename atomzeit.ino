@@ -1,14 +1,7 @@
-#include <Arduino.h>
-
-#include <SPI.h>
-#include <Wire.h>
-#include <RTClib.h> 
-#include <Time.h>
+// #include <Arduino.h>
 
 
 #include "util.h"
-
-#include "WiFi.h"
 #include "url.h"
 
 /****f* 
@@ -62,7 +55,7 @@ int atomzeit:getAtomzeitFromWeb(){
     WiFiSocket *socket=url->getSocket();
     util::printfln("findString retCode=%d\nBuffer=%s",retCode,url->getBuf());
     
-     date ad; // atom date
+    date ad; // atom date
     sscanf(url->getBuf(),"%d.%d.%d%*s%d:%d",&date.d,&date.m,&date.y,&time.h,&time.m);
     util::printfln("date: %d.%d.%d time: %d:%d",date.d,date.m,date.y,time.h,time.m);
 
@@ -70,22 +63,22 @@ int atomzeit:getAtomzeitFromWeb(){
     hm tmp;
     retCode=url->findString("<b>Sonnenaufgang:</b> ",url::removeSearchString);
     sscanf(url->getBuf(),"%d:%d",&tmp.h,&tmp.m);
-    minute sr(tmp);
+    minute sunrise(tmp); // sunrise and sunset
 
     util::msgln("findString retCode=%d\nBuffer=%s",retCode,url->getBuf());   
-    util::msgln("sunrise: %d:%d",sr.gethh(),sr.getmm());
+    util::msgln("sunrise: %d:%d",sunrise.gethh(),sunrise.getmm());
 
     retCode=url->findString("Sonnenuntergang:",url::closeAfterFind | url::removeSearchString);
     sscanf(url->getBuf(),"%d:%d",&tmp.h,&tmp.m);
-    minute ss(tmp)
+    minute sunset(tmp)
 
     util::printfln("findString retCode=%d\nBuffer=%s",retCode,url->getBuf());   
-    util::printfln("sunset: %d:%d",ss.gethh(),ss.getmm());
+    util::printfln("sunset: %d:%d",sunset.gethh(),sunset.getmm());
 
     // now calc the minutes of sunrise and sunset from midnight
     sun sunRiseSet(date.y);
-    this->sunrise=sr.getm()+sunRiseSet.adjustSunrise(date); 
-    this->sunset =ss.getm()+sunRiseSet.adjustSunset(date); 
+    this->sunrise=sunrise.getm()+sunRiseSet.adjustSunrise(date); 
+    this->sunset =sunset.getm()+sunRiseSet.adjustSunset(date); 
     
     // now calculate the millis at last midnight
     unsigned long t=millis();

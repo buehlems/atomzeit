@@ -18,7 +18,9 @@ class minute {
   int mm;
  public:
   const static int day=24*60;
-  minute(void) { hh=0; mm=0; };
+  minute(void) { hh=0; mm=0; }
+  minute(hm hm) { hh=hm.hh; mm=hm.mm; }
+  minute(int m) { minutes2time(m); }
   ~minute(void) { };
   int time2minutes(int h, int m);
   int time2minutes(hm &t) { return time2minutes(t.hh,t.mm); } ;
