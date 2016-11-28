@@ -4,7 +4,7 @@
 #include "WiFi.h"
 
 
-class url {
+class Url {
  public:
   const static int ok=            0;
   const static int serverError=  -1; // error during open socket
@@ -15,8 +15,8 @@ class url {
   const static int removeSearchString   = 0x02;
   const static int resetBuf             = 0x04;
 
-  url(WiFi *wifi);
-  ~url(void);
+  Url(WiFi *wifi);
+  ~Url(void);
   int requestWebPage(const char *server, const char* page=NULL);
   int findString(const char *sstr, int mode=0);
   WiFiSocket *getSocket() { return &socket; }

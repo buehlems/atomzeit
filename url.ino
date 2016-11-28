@@ -5,9 +5,9 @@
 
 /****f* 
   *  NAME
-  *    url -- 
+  *    Url -- 
   *  SYNOPSIS
-  *   url url(wifi);
+  *   Url url(wifi);
   *  FUNCTION
   *    define url
   *  INPUTS
@@ -16,13 +16,13 @@
   *    ---
    ******
 */
-url::url(WiFi *wifi) {
+Url::Url(WiFi *wifi) {
   this->wifi = wifi;
   resetRespBuf();
   invalidateSocket();
 }
 
-url::~url(void) {
+Url::~Url(void) {
 }
 
 
@@ -41,7 +41,7 @@ url::~url(void) {
   *    ---
    ******
 */
-void url::resetRespBuf(){
+void Url::resetRespBuf(){
   respBuf[0] = '\0';
 }
 
@@ -58,7 +58,7 @@ void url::resetRespBuf(){
   *    ---
    ******
 */
-void url::invalidateSocket(){
+void Url::invalidateSocket(){
   for(int i=0; i<sizeof(socket.host); i++)
     socket.host[0]=0;
 }
@@ -76,7 +76,7 @@ void url::invalidateSocket(){
   *    number of sockets closed
    ******
 */
-int url::closeConnection(){
+int Url::closeConnection(){
     int retcode=wifi->closeSocket(socket.socket);
     invalidateSocket();
     util::msgln("number of sockets closed: %d",retcode);
@@ -98,7 +98,7 @@ int url::closeConnection(){
   *    error code
    ******
 */
-int url::waitForServerResponse(const int retries, const int waitDelay){
+int Url::waitForServerResponse(const int retries, const int waitDelay){
   boolean gotResponse=false;
   int retcode;
 
@@ -142,7 +142,7 @@ int url::waitForServerResponse(const int retries, const int waitDelay){
   *    error code
    ******
 */
-int url::requestWebPage(const char *server, const char* page){
+int Url::requestWebPage(const char *server, const char* page){
   boolean gotResponse=false;
 
   util::msgln("open client socket %s",server);
@@ -194,7 +194,7 @@ int url::requestWebPage(const char *server, const char* page){
  *    error code
  ******
  */
-int url::findString_int(const char *sstr, const int mode){
+int Url::findString_int(const char *sstr, const int mode){
   char *begin; // first matching character in respBuf
   boolean found=false;
   int bytesRead=0;
@@ -303,7 +303,7 @@ int url::findString_int(const char *sstr, const int mode){
  *    error code
  ******
  */
-int url::findString(const char *sstr, const int mode){
+int Url::findString(const char *sstr, const int mode){
   int retcode=findString_int(sstr, mode);
   if(retcode==stringNotFound){
     closeConnection();
@@ -327,7 +327,7 @@ int url::findString(const char *sstr, const int mode){
  *    number of matching characters, begin will be set
  ******
  */
-int url::matchString(const char *buf, const char *matchstr, char **begin){
+int Url::matchString(const char *buf, const char *matchstr, char **begin){
   char *current_1=(char *)buf; // current_1[n] points to next to match character in buf
   int n=0; // position in matchstr to match
   boolean found=false;

@@ -3,24 +3,47 @@
 
 #include "sun.h" // date
 #include "hms.h" // hm
+#include "WiFi.h" // WiFi
+#include "url.h" // url
 
-class atomzeit {
+
+/****f* 
+  *  NAME
+  *    Atomzeit -- 
+  *  SYNOPSIS
+  *   n/a
+  *  FUNCTION
+  *    all times are with respect to midnight today
+  *  INPUTS
+  *   n/a
+  *  RESULT
+  *    n/a
+   ******
+*/
+class Atomzeit {
  public:
-  atomzeit(WiFi *_w);
+  Atomzeit(WiFi *_w);
+  ~Atomzeit();
   int getAtomzeitFromWeb();
   int getSunrise() { return sunrise; }
   int getSunset()  { return sunset; }
-  date &getDate() { return date; }
-  hm &getTime() { return time; }
-  unsigned long getMillis0() { return millis0; }
+  Date &getDate() { return date; }
+  Hm &getTime() { return time; }
+  unsigned long getMillis0();
+  long millis();
+  bool isInitialized();
+  long minutes2millis(int m);
+  long millisSunrise();
+  long millisNextSunrise();
+  long millisSunset();
   
  private:
-  url *url;
+  Url *url;
   int sunrise=-1; // sunrise today in minutes from midnight
   int sunset=-1;  // sunset today in minutes from midnight
-  date date;
-  hm time;
-  unsigned long millis0; // milli counter at 0:00h
+  Date date;
+  Hm time;
+  unsigned long millis0=0; // milli counter at 0:00h
 
 };
 
