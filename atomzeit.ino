@@ -81,7 +81,7 @@ int Atomzeit::getAtomzeitFromWeb(){
   this->sunset =sunset.getMinutesDay()+sunRiseSet.adjustSunSet(date); 
     
   // now calculate the millis at last midnight
-  unsigned long t=millis();
+  unsigned long t=::millis();
   unsigned long millis_since_midnight=(time.h*60+time.m)*60000;
   this->millis0=t-millis_since_midnight;
     
@@ -124,7 +124,7 @@ long Atomzeit::millis() {
   if(getMillis0()==0 && ! isInitialized()){
     return -1;
   }
-  unsigned long t=millis();
+  unsigned long t=::millis();
   return (long)(t-getMillis0());
 }
 

@@ -6,20 +6,6 @@
 #include "WiFi.h" // WiFi
 #include "url.h" // url
 
-
-/****f* 
-  *  NAME
-  *    Atomzeit -- 
-  *  SYNOPSIS
-  *   n/a
-  *  FUNCTION
-  *    all times are with respect to midnight today
-  *  INPUTS
-  *   n/a
-  *  RESULT
-  *    n/a
-   ******
-*/
 class Atomzeit {
  public:
   Atomzeit(WiFi *_w);
