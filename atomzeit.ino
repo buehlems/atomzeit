@@ -92,7 +92,7 @@ int Atomzeit::getAtomzeitFromWeb(){
 
 /****f* 
   *  NAME
-  *    get value of the millis counter at midnight today
+  *    getMillis0 -- get value of the millis counter at midnight today
   *  SYNOPSIS
   *   unsigned long m=getMillis0();
   *  FUNCTION
@@ -109,7 +109,7 @@ unsigned long Atomzeit::getMillis0() {
 
 /****f* 
   *  NAME
-  *    calculate the milliseconds passed since midnight
+  *    millis() -- calculate the milliseconds passed since midnight
   *  SYNOPSIS
   *   long m=millis();
   *  FUNCTION
@@ -130,7 +130,7 @@ long Atomzeit::millis() {
 
 /****f* 
   *  NAME
-  *    check if Atomzeit has been initialized
+  *    isInitialized() -- check if Atomzeit has been initialized
   *  SYNOPSIS
   *   bool isinit=atomzeit.isInitialized();
   *  FUNCTION
@@ -149,7 +149,7 @@ bool Atomzeit::isInitialized() {
 
 /****f* 
   *  NAME
-  *    calculate the millis of a point in time
+  *    minutes2millis -- calculate the millis of a point in time
   *  SYNOPSIS
   *   long md=millis(minutes);
   *  FUNCTION
@@ -164,10 +164,27 @@ long Atomzeit::minutes2millis(int m) {
   return((long)m * 60 * 1000);
 }
 
+/****f* 
+  *  NAME
+  *    millis2minutes - convert milli seconds into minutes
+  *  SYNOPSIS
+  *   int minutes=millis2minutes(::millis());
+  *  FUNCTION
+  *    
+  *  INPUTS
+  *    mil - the milli secondds
+  *  RESULT
+  *    minutes
+   ******
+*/
+int Atomzeit::millis2minutes(unsigned long mil) { 
+  return(mil/((unsigned long)60*1000));
+}
+
 
 /****f* 
   *  NAME
-  *    calculate the millis of the sunrise today
+  *    millisSunrise -- calculate the millis of the sunrise today
   *  SYNOPSIS
   *   long m=millisSunrise();
   *  FUNCTION
@@ -184,7 +201,7 @@ long Atomzeit::millisSunrise() {
 
 /****f* 
   *  NAME
-  *    calculate the millis of the sunrise of the next day
+  *    millisNextSunrise -- calculate the millis of the sunrise of the next day
   *  SYNOPSIS
   *   long m=millisNextSunrise();
   *  FUNCTION
@@ -196,13 +213,13 @@ long Atomzeit::millisSunrise() {
    ******
 */
 long Atomzeit::millisNextSunrise() { 
-  return(minutes2millis(this->sunrise+60*24));
+  return(minutes2millis(this->sunrise+Minute::day));
 }
 
 
 /****f* 
   *  NAME
-  *    calculate the millis of the sunset today
+  *    millisSunset -- calculate the millis of the sunset today
   *  SYNOPSIS
   *   long m=millisSunset();
   *  FUNCTION
@@ -215,4 +232,61 @@ long Atomzeit::millisNextSunrise() {
 */
 long Atomzeit::millisSunset() { 
   return(minutes2millis(this->sunset));
+}
+
+/****f* 
+  *  NAME
+  *    getNextEvent -- get the minutes from time until the next event
+  *  SYNOPSIS
+  *   int m=getNextEvent(minutes,&type);
+  *  FUNCTION
+  *    calculate the time until the next event occurs
+  *  INPUTS
+  *    time - current time in minutes
+  *    type - return value for the type (optional)
+  *  RESULT
+  *    minuntes until the next event and set type. 
+   ******
+*/
+int Atomzeit::getNextEvent(int time, char *type) { 
+  int m=0; // remaining time
+  char t=0; // type
+
+  if(!this->isInitialized()){
+    m=this->ERROR;
+    t=this->ERROR;
+  }else if(time > sunrise+Minute::day){
+    t=this->BEYOND;
+    m=0;
+  }else if(time > sunset){
+    t=this->NEXTDAY;
+    m= sunrise+Minute::day-time;
+  }else if(time > sunrise){
+    t=this->SUNSET;
+    m= sunset-time;
+  }else{ 
+    t=this->SUNRISE;
+    m= sunrise-time;
+  }
+  if(type)
+    *type=t;
+  return m;
+}
+
+/****f* 
+  *  NAME
+  *    getNextEvent - get the minutes until the next event
+  *  SYNOPSIS
+  *   int m=getNextEvent(&type);
+  *  FUNCTION
+  *    calculate the time from now until the next event occurs
+  *  INPUTS
+  *    type - return value for the type (optional)
+  *  RESULT
+  *    minuntes until the next event and set type. 
+   ******
+*/
+int Atomzeit::getNextEvent(char *type) { 
+  long ml=this->millis();
+  return(getNextEvent(millis2minutes(ml),type));
 }
